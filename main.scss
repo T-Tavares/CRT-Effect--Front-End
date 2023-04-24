@@ -1,0 +1,301 @@
+// ---------------------------------------------------------------- //
+// ---------------------------- MIXINS ---------------------------- //
+// ---------------------------------------------------------------- //
+
+@mixin absoluting($place, $width: 100%, $height: 100%) {
+    position: absolute;
+    width: $width;
+    height: $height;
+    @if $place == top {
+        top: 0;
+    }
+    @if $place == topleft {
+        top: 0;
+        left: 0;
+    }
+    @if $place == topright {
+        top: 0;
+        right: 0;
+    }
+    @if $place == bottom {
+        bottom: 0;
+    }
+    @if $place == bottomleft {
+        bottom: 0;
+        left: 0;
+    }
+    @if $place == bottomright {
+        bottom: 0;
+        right: 0;
+    }
+    @if $place == center {
+        top: 50%;
+        bottom: 50%;
+        translate: -50% -50%;
+    }
+}
+
+// ---------------------------------------------------------------- //
+// ---------------------------- RESET ----------------------------- //
+// ---------------------------------------------------------------- //
+
+* {
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: monospace;
+    ::selection {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+body {
+    // those traditional css variables are here to make the javascript functions that  will change the theme of the screen
+    --font-colour: #555;
+    --screen-colour: #111;
+    --input-colour: #222;
+    --input-text-colour: #fff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: #000;
+    color: var(--font-colour);
+    h1 {
+        margin-bottom: 20px;
+        font-variant: small-caps;
+        color: #999 !important;
+    }
+}
+
+// ---------------------- TV SCREEN WRAPPER ----------------------- //
+
+.tv-screen {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 70vh;
+    aspect-ratio: 4 / 3;
+    border-radius: 30px;
+    padding: 30px;
+    background-color: var(--screen-colour);
+}
+
+// ----------------------- TV ON/OFF BUTTON ----------------------- //
+
+.tv-switch {
+    position: absolute;
+    top: calc(-5vh - 10px);
+
+    height: 5vh;
+    width: 10vh;
+
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #555;
+    background-color: #222;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    &:hover {
+        color: #999;
+        background-color: #1a1a1a;
+    }
+    &.open {
+        color: rgb(0, 254, 0);
+        text-shadow: 0 0 15px rgb(0, 255, 0);
+    }
+}
+
+// ------------ SCREEN THEMES - COLOUR / DARK / LIGHT ------------- //
+
+.screen-colour-switch {
+    position: absolute;
+    bottom: -50px;
+    display: block;
+    align-self: end;
+    justify-self: end;
+    // z-index: 20;
+    button {
+        width: 100px;
+        height: 30px;
+        border-radius: 30px;
+        background-color: #444;
+        color: #b9b9b9;
+
+        cursor: pointer;
+
+        // &.open {
+        //     color: #fff;
+        //     text-shadow: 0 0 10px #fff;
+        // }
+    }
+}
+
+@keyframes tv-switch {
+    0% {
+        top: 0%;
+        height: 100%;
+        background-color: rgba(217, 217, 217, 0);
+        transform: scaleX(1.1);
+    }
+    80% {
+        background-color: rgb(255, 255, 255);
+        box-shadow: inset 0 0 50px 10px #000, inset 0 0 5px 5px #000, 0 0 10px #000;
+        transform: scaleX(1.1);
+    }
+    100% {
+        top: 50%;
+        height: 0%;
+        box-shadow: inset 0 0 50px 10px #2d2d2d, inset 0 0 5px 5px #474747, 0 0 10px #000;
+
+        transform: scaleX(0.5);
+    }
+}
+
+// ------------------------- CRT WRAPPER -------------------------- //
+
+.crt-effect {
+    @include absoluting('topleft');
+    overflow: hidden;
+    pointer-events: none;
+}
+
+// ------------ TV ON/OFF STYLE ELEMENTS AND ANIMATION ------------ //
+
+.black {
+    @include absoluting('topleft');
+    background-color: #000;
+    z-index: 20;
+}
+
+.turn-off,
+.turn-on {
+    @include absoluting('top');
+    align-self: center;
+    background-color: rgba(217, 217, 217, 0);
+
+    // box-shadow: dark borders / dark top and bottom / external dim
+    box-shadow: inset 0 0 50px 10px #000, inset 0 0 5px 5px #000, 0 0 10px #000;
+    transform: scaleX(1.1);
+
+    background-blend-mode: color-dodge;
+
+    animation: tv-switch 0.4s cubic-bezier(0.04, 0.98, 0.63, 0.99) forwards;
+    transition: 1s ease-in-out;
+    z-index: 21;
+}
+.turn-on {
+    animation: tv-switch 0.5s cubic-bezier(1, 0.01, 0.56, 0.93) reverse;
+}
+
+.crt-effect,
+.screen-colour-switch,
+.your-content {
+    &.off {
+        display: none;
+    }
+}
+
+// ------------------- CRT VERTICAL SCAN LINES -------------------- //
+
+.vertical-scan {
+    @include absoluting('topleft');
+
+    mix-blend-mode: multiply;
+    opacity: 10%;
+    pointer-events: none;
+    z-index: 20;
+    border-radius: 10px;
+
+    // TODO automate the size and amount of stripes according to the screen height and width
+    // ! automate the size and amount of stripes according to the screen height and width
+    // ! automate the size and amount of stripes according to the screen height and width
+    // ! automate the size and amount of stripes according to the screen height and width
+
+    $gradient: ();
+    $stripe: none;
+    $stripe-colour-1: #fff;
+    $stripe-colour-2: #000;
+    $n-of-stripes: 500;
+
+    @for $i from 1 through $n-of-stripes {
+        @if $i % 2 != 0 {
+            $stopper: #{calc($i / $n-of-stripes) * 100}#{'%'};
+            $stripe: append($stripe-colour-1, $stopper), append($stripe-colour-2, $stopper);
+            $gradient: join($gradient, $stripe);
+        } @else {
+            $stopper: #{calc($i / $n-of-stripes) * 100}#{'%'};
+            $stripe: append($stripe-colour-2, $stopper), append($stripe-colour-1, $stopper);
+            $gradient: join($gradient, $stripe);
+        }
+    }
+
+    background: linear-gradient#{'(90deg,'}$gradient#{')'};
+}
+
+// ------------------ CRT HORIZONTAL SCAN LINES ------------------- //
+
+$crt-big-line-size: 100px;
+$crt-time: 50s;
+
+@keyframes crt {
+    0% {
+        top: calc(0% - $crt-big-line-size);
+    }
+    100% {
+        top: 100%;
+    }
+}
+
+@mixin crt-scan-lines {
+    position: absolute;
+    left: 0;
+    height: $crt-big-line-size;
+    width: 100%;
+    z-index: 19;
+    background-color: rgba(255, 255, 255, 0.005);
+    pointer-events: none;
+    backdrop-filter: sepia(30%);
+}
+@for $n from 1 through 5 {
+    $delay-increment: -#{calc($n / 5)};
+
+    .scan-#{$n} {
+        @include crt-scan-lines();
+        animation: crt #{$crt-time} linear infinite;
+        animation-delay: #{calc($delay-increment * $crt-time)};
+    }
+}
+
+// ----------------------- SCREEN CONTENT  ------------------------ //
+
+.your-content {
+    display: flex;
+    flex-flow: column;
+    overflow: auto;
+
+    p {
+        margin: 10px 0;
+        font-size: 16px;
+        line-height: 25px;
+        text-align: justify;
+    }
+    textarea {
+        width: 100%;
+        height: 20vh;
+        color: var(--input-text-colour);
+        background-color: var(--input-colour);
+        border-radius: 3px;
+        resize: none;
+        padding: 20px;
+        margin-bottom: 3vh;
+    }
+}
